@@ -1,0 +1,5 @@
+import pickle
+from sklearn.metrics.pairwise import cosine_similarity
+
+similarity = cosine_similarity(vectors).astype('float16')   # ~46 MB, under GitHub's limit
+pickle.dump(similarity, open('similarity.pkl', 'wb'))
