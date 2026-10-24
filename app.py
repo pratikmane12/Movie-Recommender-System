@@ -45,8 +45,18 @@ def recommend(movie):
 
 movies_dict = pickle.load(open('movie_dict.pkl', 'rb'))
 movies = pd.DataFrame(movies_dict)
-similarity = pickle.load(open('similarity.pkl', 'rb'))
+import streamlit as st
 
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+@st.cache_resource
+def get_similarity(movies):
+    cv = CountVectorizer(max_features=5000, stop_words='english')
+    vectors = cv.fit_transform(movies['tags']).toarray()
+    return cosine_similarity(vectors)
+
+similarity = get_similarity(movies)
 st.title('Movie Recommender System')
 selected_movie_name = st.selectbox('Select a movie', movies['title'].values)
 
